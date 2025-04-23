@@ -19,6 +19,19 @@ export default function Notifications() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current])
 
+  const deleteNoti = async (id: string) => {
+    await NotificationAPI.delete(id).then((res) => {
+      if (res.data.status) {
+        message.destroy()
+        message.success('Xóa thành công!')
+        fetch()
+      } else {
+        message.destroy()
+        message.error('Xóa thất bại!')
+      }
+    })
+  }
+
   const fetch = async (data?: string) => {
     await NotificationAPI.fetchAll({ search: data, page: current, limit: pageSize })
       .then((res) => {
@@ -77,7 +90,9 @@ export default function Notifications() {
               title="Bạn có chắc chắn muốn xóa người dùng này không?"
               okText="Xóa"
               cancelText="Hủy"
-              onConfirm={() => {}}>
+              onConfirm={() => {
+                deleteNoti(record._id)
+              }}>
               <Button type="primary" danger>
                 Xóa
               </Button>

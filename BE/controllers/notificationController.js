@@ -54,9 +54,21 @@ const getAllNotifications = async (req, res) => {
     res.status(500).json({ status: false, message: 'Có lỗi xảy ra, thử lại sau' });
   }
 }
+const deleteNotification = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const notification = await Notification.findByIdAndDelete(id);
+    if (!notification) return res.status(404).json({ status: false, message: 'Thông báo không tồn tại' });
+    res.json({ status: true, message: 'Xóa thông báo thành công' });
+  } catch (error) {
+    console.error('Lỗi xóa thông báo:', error);
+    res.status(500).json({ status: false, message: 'Có lỗi xảy ra, thử lại sau' });
+  }
+}
 
 module.exports = {
   createNotification,
   createSystemNotification,
   getAllNotifications,
+  deleteNotification
 };

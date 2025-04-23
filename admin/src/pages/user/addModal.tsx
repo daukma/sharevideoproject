@@ -17,28 +17,28 @@ const ModalAddUser = ({ open, setOpen }: ModalProps) => {
     if (file.status === 'removed') {
       setAvatarFile(null)
     } else {
-      setAvatarFile(file.originFileObj)
+      setAvatarFile(file)
     }
   }
   const onFinish = async (values: IUser) => {
-    console.log(values)
     const formData = new FormData()
-     formData.append('name', values.name)
-     formData.append('password', values.password)
-     if(values.phone) formData.append('phone', values.phone)
-     if(values.address) formData.append('address', values.address)
-     if(values.dob) formData.append('dob', values.dob.toISOString())
+    formData.append('name', values.name)
+    formData.append('username', values.username)
+    formData.append('password', values.password)
+    if (values.phone) formData.append('phone', values.phone)
+    if (values.address) formData.append('address', values.address)
+    if (values.dob) formData.append('dob', values.dob.toISOString())
 
-     if (avatarFile) {
-       formData.append('image', avatarFile)
-     }
+    if (avatarFile) {
+      formData.append('image', avatarFile)
+    }
     await AuthAPI.register(formData)
       .then((res) => {
         if (res.data.status) {
           message.destroy()
           message.success('Thêm mới thành công!')
           setOpen(false)
-          window.location.reload()
+          // window.location.reload()
         } else {
           message.destroy()
           message.error('Thêm mới thất bại!')

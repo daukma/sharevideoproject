@@ -15,7 +15,18 @@ export default function Comments() {
     fetch()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [current])
-
+  const deleteComment = async (id: string) => {
+    await CommentAPI.delete(id).then((res) => {
+      if (res.data.status) {
+        message.destroy()
+        message.success('Xóa thành công!')
+        fetch()
+      } else {
+        message.destroy()
+        message.error('Xóa thất bại!')
+      }
+    })
+  }
   const fetch = async (data?: string) => {
     await CommentAPI.fetchAll({ search: data, page: current, limit: pageSize })
       .then((res) => {
@@ -86,7 +97,9 @@ export default function Comments() {
               title="Bạn có chắc chắn muốn xóa người dùng này không?"
               okText="Xóa"
               cancelText="Hủy"
-              onConfirm={() => {}}>
+              onConfirm={() => {
+                deleteComment(record._id)
+              }}>
               <Button type="primary" danger>
                 Xóa
               </Button>

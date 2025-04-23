@@ -37,10 +37,6 @@ export default function HeaderComponent() {
   const items: MenuProps['items'] = [
     {
       key: '1',
-      label: <Text onClick={() => {}}>Đổi mật khẩu</Text>,
-    },
-    {
-      key: '2',
       label: (
         <Text
           className="text-black"

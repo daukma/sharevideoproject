@@ -2,6 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const http = require('http');
+const path = require('path');
+
 
 const connectDb = require('./helps/connectDb'); // Kết nối DB
 const setupSocket = require('./helps/socket'); // Thiết lập socket
@@ -29,7 +31,7 @@ const { io, connectedUsers } = setupSocket(server);
 app.set('io', io);
 app.set('connectedUsers', connectedUsers);
 
-app.use('/videos', express.static('public/videos'));
+app.use('/videos', express.static(path.join(__dirname, 'public/videos')));
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);

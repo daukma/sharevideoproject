@@ -1,0 +1,51 @@
+// node_module chứa thư viện để chạy đc nodejs
+
+// .env chứa các biến mà muốn giấu khỏi code để bảo mật 
+ACCESS_TOKEN_SECRET=dothanhbinh602token   chứa đoạn chữ ký (sign)  để cho một mình (ândbshgfbsdhfhsd)+ chữ kí -> đoạn bảo mật do jwt nó tạo ra ( giống mã hóa )
+
+{'username':'abc','password':'bcd'}
+
+// bycryt này để mã hóa mật khẩu -> ví dụ mk : 1 -> sadmndfjhfsdbfjhsdgfjhsdfhjsdfbdfsjdb
+
+public/ này để có thể share tài nguyên người khác trỏ tới 
+
+
+Mô hình BE : 
+-  Kết nối DB () : helps/connectDb.js
+-  Từ db m phải tạo ra đc các bảng dữ liệu ( user , tokens , video , comment , notification , follow )
+
+User ( name , tên đăng nhập , mât khẩu , địa chỉ , sđt , ....) - > models/userModel  (required là bắt buộc phải có) tương tự với các bảng khác
+
+
+ref trong model là liên kết đến bảng
+
+follow quy trình như sau : a follow b -> trên db sẽ tạo dòng dữ liệu không xóa có trạng thái status là follow
+
+timestamp : hàm tự động tạo ra 2 dữ liệu createdAt: thời gian tạo ra data và updateAt : cứ sửa data thì updateat thay đổi 
+
+FE tự tưởng tượng ra chức năng: Hiện thực hóa các BE 
+BE trả ra 1 object chuỗi dữ liệu -> 
+
+1 đội ngũ chuẩn thì vận hàng song song -> fe chỉ hiển thị data array =[{'name':'a','age':'b'},{'name':'a','age':'b'},{'name':'a','age':'b'}]
+
+Mock data : data ảo để làm giao diện
+
+
+Login vào sinh ra 2 đoạn mã access và refresh -> đoạn mã access sẽ là core chính -> hết hạn mới sử dụng refresh 
+
+Tạo ra 1 đoạn giao thức ( route ) -> khi gọi đến giao thức thì controller sẽ hoạt động ( controller là giao tiếp của BE với db)
+Route là gì 1 đoạn giao thức bao gồm 1 đường dẫn định nghĩa , 1 phương thức mà khi gọi đến sẽ hành động 1 controller ()
+post , get , delete , put // Tạo , lấy , xóa , sửa
+Cấu trúc route là route.METHOD('đường dẫn',middleware(nếu có),controller)
+
+Middleware là gì ? Đó là cầu nối giữa route và controller , khi thỏa mãn middleware thì mới làm controller 
+
+Cấu trúc BE (req,res)=> request nhận , response gửi
+
+phía trước res cái gì thì cái sau req cái đấy
+
+Ví dụ : T muốn lấy ra danh sách người dùng thì t phải là admin , middleware đc sinh ra để kiểm tra m có phải admin không nếu không phải sẽ chặn thao tác tiếp
+
+Controller là giao tiếp giữa BE và DB 
+
+quy tắc khi tạo route /:id thì sau dấu : là params -> req.params.id

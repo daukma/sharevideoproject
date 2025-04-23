@@ -30,6 +30,18 @@ export default function Videos() {
         setDateVideo([])
       })
   }
+  const deleteVideo = async (id: string) => {
+    await VideoAPI.delete(id).then((res) => {
+      if (res.data.status) {
+        message.destroy()
+        message.success('Xóa thành công!')
+        fetch()
+      } else {
+        message.destroy()
+        message.error('Xóa thất bại!')
+      }
+    })
+  }
 
   const columns = [
     {
@@ -96,7 +108,9 @@ export default function Videos() {
               title="Bạn có chắc chắn muốn xóa người dùng này không?"
               okText="Xóa"
               cancelText="Hủy"
-              onConfirm={() => {}}>
+              onConfirm={() => {
+                deleteVideo(record._id)
+              }}>
               <Button type="primary" danger>
                 Xóa
               </Button>
