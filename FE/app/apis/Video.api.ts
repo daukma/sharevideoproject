@@ -24,6 +24,18 @@ export class VideoAPI {
     })
   }
 
+  static fetchbyUser = (userId: string) => {
+    return request({
+      method: Method.GET,
+      url: `/${this.COMPONENT_NAME}/videouser/${userId}`,
+      params: {
+        filter: {
+          order: 'createdAt DESC',
+        },
+      },
+    })
+  }
+
   static delete = (id: string) => {
     return request({
       method: Method.DELETE,

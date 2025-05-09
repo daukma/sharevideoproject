@@ -1,33 +1,51 @@
 // ProfileScreen.tsx
 import { AuthAPI } from '@/app/apis/Auth.api'
+import { VideoAPI } from '@/app/apis/Video.api'
 import { useAuth } from '@/app/context/AuthContext'
 import { removeAuthToken } from '@/app/helper/authToken.helper'
 import { IUser } from '@/app/inteface/User.interface'
+import { IVideo } from '@/app/inteface/Video.interface'
 import React, { useEffect, useState } from 'react'
-import { Alert, Dimensions, Image, Text, View } from 'react-native'
-import { Button, Card } from 'react-native-paper'
+import { Alert, Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, IconButton } from 'react-native-paper'
 
-const CARD_WIDTH = (Dimensions.get('window').width - 20) / 3
+const numColumns = 3
+const screenWidth = Dimensions.get('window').width
+const itemSize = screenWidth / numColumns
 
 function ProfileScreen() {
   const [profile, setProfile] = useState<IUser>()
+  const [videos, setVideos] = useState<IVideo[]>([])
+  const [loading, setLoading] = useState(true)
 
   const { setUserToken } = useAuth()
-
   const getProfile = async () => {
     try {
-      await AuthAPI.getProfile().then((res) => {
-        if (res.data.status) {
-          setProfile(res.data.data.user)
-        } else {
-          Alert.alert('❌ Thất bại', 'Lấy thông tin thất bại')
-        }
-      })
+      await AuthAPI.getProfile()
+        .then((res) => {
+          if (res.data.status) {
+            setProfile(res.data.data.user)
+          } else {
+            Alert.alert('❌ Thất bại', 'Lấy thông tin thất bại')
+          }
+        })
+        .finally(() => setLoading(false))
     } catch (error) {
       Alert.alert('❌ Thất bại', 'Lỗi mạng')
       console.log(error)
       handleLogout()
     }
+  }
+
+  const getVideo = async (id: string) => {
+    try {
+      await VideoAPI.fetchbyUser(id)
+        .then((res) => {
+          setVideos(res.data.data)
+        })
+        .catch((er) => console.log(er))
+        .finally(() => setLoading(false))
+    } catch (error) {}
   }
 
   const handleLogout = async () => {
@@ -38,71 +56,88 @@ function ProfileScreen() {
   useEffect(() => {
     getProfile()
   }, [])
+  const renderVideoItem = ({ item }: { item: IVideo }) => (
+    <TouchableOpacity style={styles.videoItem}>
+      <Image source={{ uri: item.thumbnail }} style={styles.thumbnail} resizeMode="cover" />
+    </TouchableOpacity>
+  )
+
+  if (loading) {
+    return <ActivityIndicator style={{ flex: 1 }} size="large" color="#007bff" />
+  }
 
   return (
-    <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'center' }}>
-      <Image source={{ uri: profile?.profile }} style={{ width: 100, height: 100, borderRadius: 50 }} />
-      <Text>{profile?.username}</Text>
-
-      <Button mode="contained" onPress={handleLogout}>
-        Đăng xuất
-      </Button>
-      <View
-        style={{
-          flex: 1,
-          marginTop: 10,
-          flexDirection: 'row',
-          gap: 4,
-          flexWrap: 'wrap',
-          padding: 4,
-          width: '100%',
-          borderColor: 'black',
-          borderStyle: 'solid',
-          borderWidth: 1,
-        }}>
-        <Card
-          style={{
-            padding: 16,
-            width: CARD_WIDTH,
-            height: 100,
-            backgroundColor: '#689ac270',
-            borderRadius: 5,
-          }}>
-          <Text>123 Views</Text>
-        </Card>
-        <Card
-          style={{
-            padding: 16,
-            width: CARD_WIDTH,
-            height: 100,
-            backgroundColor: '#689ac270',
-            borderRadius: 5,
-          }}>
-          <Text>123 Views</Text>
-        </Card>
-        <Card
-          style={{
-            padding: 16,
-            width: CARD_WIDTH,
-            height: 100,
-            backgroundColor: '#689ac270',
-            borderRadius: 5,
-          }}>
-          <Text>123 Views</Text>
-        </Card>
-        <Card
-          style={{
-            padding: 16,
-            width: CARD_WIDTH,
-            height: 100,
-            backgroundColor: '#689ac270',
-            borderRadius: 5,
-          }}>
-          <Text>123 Views</Text>
-        </Card>
+    <View style={styles.container}>
+      <View style={{ display: 'flex', justifyContent: 'flex-end' }}>
+        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+          <IconButton
+            icon="logout" // Bạn có thể chọn icon khác nếu muốn
+            size={30}
+            style={styles.logoutBtn}
+            onPress={handleLogout} // Gọi hàm handleLogout khi nhấn
+          />
+        </TouchableOpacity>
       </View>
+      <View style={styles.header}>
+        <Image source={{ uri: profile?.profile }} style={styles.avatar} />
+        <Text style={styles.username}>{profile?.username}</Text>
+        <View style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
+          <Text style={styles.videoCount}>10 follower</Text>
+          <Text style={styles.videoCount}>12 follow</Text>
+          <Text style={styles.videoCount}>{videos.length} video</Text>
+        </View>
+      </View>
+
+      {/* Danh sách video dạng thumbnail grid */}
+      {videos.length === 0 ? (
+        <Text style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>Bạn chưa đăng tải video nào</Text>
+      ) : (
+        <FlatList
+          data={videos}
+          renderItem={renderVideoItem}
+          keyExtractor={(item) => item._id || ''}
+          numColumns={numColumns}
+          contentContainerStyle={styles.videoGrid}
+        />
+      )}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  container: { flex: 1, backgroundColor: '#fff' },
+  header: {
+    alignItems: 'center',
+    paddingTop: 40,
+    paddingBottom: 20,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#ddd',
+  },
+  username: { fontSize: 20, fontWeight: 'bold', marginTop: 10 },
+  videoCount: { color: '#666', marginTop: 4, display: 'flex' },
+  videoGrid: { paddingTop: 10 },
+  videoItem: {
+    width: itemSize,
+    height: itemSize,
+    padding: 1,
+  },
+  thumbnail: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#ccc',
+  },
+  logoutBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 15,
+    padding: 8,
+  },
+})
 
 export default ProfileScreen

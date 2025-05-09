@@ -14,6 +14,7 @@ const LoginScreen = () => {
   const navigation = useNavigation()
 
   const handleLogin = async () => {
+    console.log(process.env.REACT_APP_API_URL)
     try {
       setLoading(true)
       await AuthAPI.login({ username, password })

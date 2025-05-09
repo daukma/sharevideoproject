@@ -1,4 +1,5 @@
 import { VideoAPI } from '@/app/apis/Video.api'
+import { AppConfig } from '@/app/AppConfig'
 import { useAuth } from '@/app/context/AuthContext'
 import { IVideo } from '@/app/inteface/Video.interface'
 import { AntDesign } from '@expo/vector-icons'
@@ -67,7 +68,7 @@ const HomeScreen = () => {
           ref={(ref) => {
             videoRefs.current[index] = ref
           }}
-          source={{ uri: process.env.LOCAL_IP_URL + item.videoUrl }}
+          source={{ uri: AppConfig.baseUrl + item.videoUrl }}
           style={styles.video}
           resizeMode={ResizeMode.COVER}
           isLooping
@@ -85,7 +86,7 @@ const HomeScreen = () => {
           </View>
         )}
         <View style={styles.textOverlay}>
-          <Text style={styles.text}>abc</Text>
+          <Text style={styles.text}>{item.title}</Text>
         </View>
       </View>
     )
