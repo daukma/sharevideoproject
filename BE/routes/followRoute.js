@@ -9,7 +9,7 @@ const adminMiddleware = require('../middlewares/adminMiddleware');
 router.post('/', authMiddleware, createFollow);
 router.get('/', adminMiddleware, getAllFollows);
 router.get('/:id', authMiddleware, getFollowFromId); // Lấy bình luận theo videoId
-router.put('/:id', authMiddleware, authRolesMiddleware, updateFollow); // Cập nhật bình luận theo ID
+router.put('/:id', authRolesMiddleware, updateFollow); // Cập nhật bình luận theo ID
 router.delete('/:id', adminMiddleware, deleteFollow); // Xóa bình luận theo ID
 
 module.exports = router;

@@ -54,14 +54,24 @@ const getAllNotifications = async (req, res) => {
     res.status(500).json({ status: false, message: 'Có lỗi xảy ra, thử lại sau' });
   }
 }
-const deleteNotification = async (req, res) => {
+const getNotificationsForUser = async (req, res) => {
+  const { id } = req.user
   try {
-    const id = req.params.id;
-    const notification = await Notification.findByIdAndDelete(id);
-    if (!notification) return res.status(404).json({ status: false, message: 'Thông báo không tồn tại' });
-    res.json({ status: true, message: 'Xóa thông báo thành công' });
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const total = await Notification.countDocuments();
+    const totalPage = Math.ceil(total / limit);
+    const notifications = await Notification.find({ $or: [{ useToId: id }, { notificationType: 'system' }] }).limit(limit).skip((page - 1) * limit).populate('userId', 'name profile username').sort({ createdAt: -1 });
+    res.status(200).json({
+      status: true, message: 'Lấy danh sách thành công', data: notifications, metaData: {
+        total,
+        page,
+        limit,
+        totalPage
+      }
+    });
   } catch (error) {
-    console.error('Lỗi xóa thông báo:', error);
+    console.error('Lỗi lấy thông báo:', error);
     res.status(500).json({ status: false, message: 'Có lỗi xảy ra, thử lại sau' });
   }
 }
@@ -70,5 +80,5 @@ module.exports = {
   createNotification,
   createSystemNotification,
   getAllNotifications,
-  deleteNotification
+  getNotificationsForUser
 };

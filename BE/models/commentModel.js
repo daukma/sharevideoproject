@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
 const commentSchema = new mongoose.Schema({
-  userId: { // Là id của người bình luận 
-    type: mongoose.Schema.Types.ObjectId,// Kiểu dữ liêu Schema.Types.ObjectId,
-    ref: 'User', // Liên kết đến bảng user
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   videoId: {
@@ -19,7 +19,7 @@ const commentSchema = new mongoose.Schema({
   content: {
     type: String,
     required: true,
-    trim: true, // Cắt khoảng trắng
+    trim: true,
   },
 }, { timestamps: true });
 

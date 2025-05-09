@@ -2,19 +2,16 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 
 const User = require('../models/userModel');
-const bcrypt = require('bcrypt');// Thư viện mã hóa mật khẩu 
-
+const bcrypt = require('bcrypt');
 const { generateAccessToken, generateRefreshToken } = require('../utils/token');
 const tokenModel = require('../models/tokenModel');
 
 exports.register = async (req, res) => {
-  const { username, password, phone, address, name, dob } = req.body;
-  console.log(req.body)
-  console.log(req.file)
+  const { username, password, phone, address, name, profile, dob } = req.body;
+
   if (req.file) {
-    profile = `${process.env.HOST}:${process.env.PORT}/videos/${req.file.filename}`;
+    profile = `${process.env.HOST}:${process.env.PORT}/uploads/${req.file.filename}`;
   }
-  console.log(profile)
   // 1. Check thiếu dữ liệu
   if (!username || !password) {
     return res.status(400).json({ status: false, message: 'Vui lòng nhập đầy đủ username, password và email' });

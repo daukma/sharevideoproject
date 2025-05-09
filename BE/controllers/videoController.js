@@ -52,6 +52,18 @@ const getVideoById = async (req, res) => {
   }
 }
 
+const getVideoByUser = async (req, res) => {
+  const userId = req.params.id;
+  try {
+    const video = await Video.find({ userId });
+    if (!video) return res.status(404).json({ status: false, message: 'Video không tồn tại' });
+    res.status(200).json({ status: true, message: 'Lấy video thành công', data: video });
+  } catch (error) {
+    console.error('Lỗi lấy video:', error);
+    res.status(500).json({ status: false, message: 'Có lỗi xảy ra, thử lại sau' });
+  }
+}
+
 const deleteVideo = async (req, res) => {
   try {
     const id = req.params.id;
@@ -69,5 +81,6 @@ module.exports = {
   getAllVideos,
   getVideoById,
   deleteVideo,
-  uploadVideo
+  uploadVideo,
+  getVideoByUser
 };

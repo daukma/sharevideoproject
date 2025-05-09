@@ -38,8 +38,6 @@ const getCommentByVideoId = async (req, res) => {
 
 
 const createComment = async (req, res) => {
-
-
   const { videoId, content } = req.body;
   if (!videoId || !content) return res.status(400).json({ status: false, message: 'Vui lòng nhập đầy đủ thông tin' });
   try {
