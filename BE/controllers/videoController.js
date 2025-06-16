@@ -21,11 +21,25 @@ const uploadVideo = async (req, res) => {
 
 const getAllVideos = async (req, res) => {
   try {
+    const search = req.query.search || '';
+
+    const query = search
+      ? {
+        $or: [
+          { title: { $regex: search, $options: 'i' } },
+        ]
+      }
+      : {};
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const total = await Video.countDocuments();
+    const total = await Video.countDocuments(query);
     const totalPage = Math.ceil(total / limit);
-    const videos = await Video.find().limit(limit).skip((page - 1) * limit).populate('userId', 'name profile username').sort({ createdAt: -1 });
+
+    // Tạo điều kiện lọc
+
+    const videos = await Video.find(query).limit(limit).skip((page - 1) * limit).populate('userId', 'name profile username').sort({ createdAt: -1 });
+    if (!videos || videos.length === 0) return res.status(404).json({ status: false, message: 'Không tìm thấy người dùng nào' });
+
     res.status(200).json({
       status: true, message: 'Lấy video thành công', data: videos, metaData: {
         total,

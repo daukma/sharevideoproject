@@ -6,7 +6,7 @@ const userSchema = new mongoose.Schema({
   name: { type: String },
   profile: { type: String, default: 'https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg' },
   address: { type: String },
-  dob: { type: Date },
+  dob: { type: String },
   phone: { type: String },
   roles: { type: String, default: 'user', enum: ['admin', 'user'] },
 }, { timestamps: true });

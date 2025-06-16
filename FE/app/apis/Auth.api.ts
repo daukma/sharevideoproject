@@ -1,6 +1,4 @@
-import axios from 'axios'
 import { Method, request } from '../helper/request.helper'
-import { IUser } from '../inteface/User.interface'
 import { IAuthReq } from './../inteface/Auth.interface'
 
 export class AuthAPI {
@@ -14,8 +12,11 @@ export class AuthAPI {
     })
   }
 
-  static register = async (data: IUser) => {
-    return await axios.post('/auth/register', data, {
+  static register = async (data: any) => {
+    return request({
+      method: Method.POST,
+      url: `/${this.COMPONENT_NAME}/register`,
+      data: data,
       headers: {
         'Content-Type': 'multipart/form-data',
       },

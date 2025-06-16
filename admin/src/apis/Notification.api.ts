@@ -32,6 +32,14 @@ export class NotificationAPI {
     })
   }
 
+  static update = (id: string, data: any) => {
+    return request({
+      method: Method.PUT, // Hoặc Method.PATCH nếu API sử dụng PATCH
+      url: `/${this.COMPONENT_NAME}/${id}`,
+      data, // Dữ liệu cần cập nhật sẽ được truyền trong body của request
+    })
+  }
+
   static create = (data: INotification) => {
     return request({
       method: Method.POST,

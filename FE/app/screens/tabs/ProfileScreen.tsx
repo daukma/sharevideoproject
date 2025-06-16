@@ -1,13 +1,14 @@
 // ProfileScreen.tsx
 import { AuthAPI } from '@/app/apis/Auth.api'
 import { VideoAPI } from '@/app/apis/Video.api'
+import { AppConfig } from '@/app/AppConfig'
 import { useAuth } from '@/app/context/AuthContext'
 import { removeAuthToken } from '@/app/helper/authToken.helper'
 import { IUser } from '@/app/inteface/User.interface'
 import { IVideo } from '@/app/inteface/Video.interface'
 import React, { useEffect, useState } from 'react'
 import { Alert, Dimensions, FlatList, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { ActivityIndicator, IconButton } from 'react-native-paper'
+import { ActivityIndicator, Button, IconButton } from 'react-native-paper'
 
 const numColumns = 3
 const screenWidth = Dimensions.get('window').width
@@ -69,17 +70,17 @@ function ProfileScreen() {
   return (
     <View style={styles.container}>
       <View style={{ display: 'flex', justifyContent: 'flex-end' }}>
-        <TouchableOpacity style={styles.logoutBtn} onPress={handleLogout}>
+        <Button onPress={handleLogout} style={{ display: 'flex', justifyContent: 'flex-end' }}>
           <IconButton
             icon="logout" // Bạn có thể chọn icon khác nếu muốn
             size={30}
             style={styles.logoutBtn}
-            onPress={handleLogout} // Gọi hàm handleLogout khi nhấn
+            // Gọi hàm handleLogout khi nhấn
           />
-        </TouchableOpacity>
+        </Button>
       </View>
       <View style={styles.header}>
-        <Image source={{ uri: profile?.profile }} style={styles.avatar} />
+        <Image source={{ uri: AppConfig.baseUrl + profile?.profile }} style={styles.avatar} />
         <Text style={styles.username}>{profile?.username}</Text>
         <View style={{ display: 'flex', flexDirection: 'row', gap: 20 }}>
           <Text style={styles.videoCount}>10 follower</Text>

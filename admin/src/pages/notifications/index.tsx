@@ -4,12 +4,15 @@ import { useEffect, useState } from 'react'
 import { NotificationAPI } from '../../apis/Notification.api'
 import { INotification } from '../../inteface/Notification.inteface'
 import ModalAdd from './addModal'
+import ModalEdit from './updateModal' // Import ModalEdit
 
 const { Search } = Input
 
 export default function Notifications() {
   const [dataNotification, setDateNotification] = useState<any>([])
-  const [open, setOpen] = useState(false)
+  const [openAdd, setOpenAdd] = useState(false)
+  const [openEdit, setOpenEdit] = useState(false)
+  const [notificationToEdit, setNotificationToEdit] = useState<INotification | null>(null) // Lưu thông báo cần sửa
   const [total, setTotal] = useState(0)
   const [current, setCurrent] = useState(1)
   const pageSize = 10
@@ -83,7 +86,13 @@ export default function Notifications() {
       render: (_: null, record: any) => {
         return (
           <Row className="flex ">
-            <Button type="primary" className="mr-2" onClick={() => () => {}}>
+            <Button
+              type="primary"
+              className="mr-2"
+              onClick={() => {
+                setNotificationToEdit(record) // Lưu thông báo cần sửa
+                setOpenEdit(true) // Mở modal sửa
+              }}>
               Sửa
             </Button>
             <Popconfirm
@@ -102,6 +111,7 @@ export default function Notifications() {
       },
     },
   ]
+
   return (
     <>
       <Typography.Title level={3} className="mb-4 uppercase font-bold">
@@ -119,10 +129,10 @@ export default function Notifications() {
             style={{ width: 400, marginBottom: 16 }}
           />
         </Row>
-        <Button type="primary" icon={<PlusOutlined />} className="mr-4" onClick={() => setOpen(true)}>
+        <Button type="primary" icon={<PlusOutlined />} className="mr-4" onClick={() => setOpenAdd(true)}>
           Thêm Thông báo
         </Button>
-        <ModalAdd open={open} setOpen={setOpen} />
+        <ModalAdd open={openAdd} setOpen={setOpenAdd} />
       </Row>
 
       <Table
@@ -143,6 +153,9 @@ export default function Notifications() {
         }} // Cập nhật trang khi người dùng thay đổi
         style={{ marginTop: 20 }}
       />
+
+      {/* Modal sửa thông báo */}
+      <ModalEdit open={openEdit} setOpen={setOpenEdit} notificationData={notificationToEdit} />
     </>
   )
 }

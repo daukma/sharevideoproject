@@ -33,6 +33,7 @@ function NotificationScreen() {
     NotificationAPI.getForUser()
       .then((res) => {
         setNoti(res.data.data)
+        console.log(res.data.data)
       })
       .catch((err) => console.log(err))
       .finally(() => {
@@ -73,6 +74,7 @@ const styles = StyleSheet.create({
   notification: {
     flexDirection: 'row',
     paddingVertical: 12,
+    marginTop: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },

@@ -14,7 +14,6 @@ const LoginScreen = () => {
   const navigation = useNavigation()
 
   const handleLogin = async () => {
-    console.log(process.env.REACT_APP_API_URL)
     try {
       setLoading(true)
       await AuthAPI.login({ username, password })
@@ -26,10 +25,12 @@ const LoginScreen = () => {
         .catch((error) => {
           Alert.alert('❌ Thất bại', 'Sai thông tin đăng nhập')
         })
+        .finally(() => {
+          setLoading(false)
+        })
     } catch (error) {
       Alert.alert('❌ Thất bại', 'Lỗi mạng')
       console.log(error)
-    } finally {
       setLoading(false)
     }
   }

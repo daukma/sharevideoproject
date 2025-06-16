@@ -6,6 +6,7 @@ import { removeAuthToken } from '../helper/authToken.helper'
 import { AuthAPI } from '../apis/Auth.api'
 import { useEffect, useState } from 'react'
 import { IUser } from '../inteface/User.interface'
+import { AppConfig } from '../AppConfig'
 
 const { Text } = Typography
 
@@ -57,7 +58,7 @@ export default function HeaderComponent() {
       <Row className="h-full justify-end items-center text-white">
         <Dropdown menu={{ items }}>
           <Space>
-            <Avatar src={profile?.profile} size="large" />
+            <Avatar src={'http://localhost:3888/videos/' + profile?.profile} size="large" />
             <span>Chào mừng,{profile?.username}</span>
             <DownOutlined style={{ color: 'white', marginLeft: '10px' }} />
           </Space>

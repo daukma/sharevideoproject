@@ -10,4 +10,4 @@ router.post('/refresh', authController.refresh);
 router.post('/logout', authController.logout);
 router.get('/me', authMiddleware, authController.getMe);
 
-module.exports = router;
+module.exports = router;  

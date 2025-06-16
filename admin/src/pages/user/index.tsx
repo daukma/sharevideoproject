@@ -5,12 +5,15 @@ import { UserAPI } from '../../apis/User.api'
 import { IUser } from '../../inteface/User.interface'
 
 import ModalAddUser from './addModal'
+import ModalUpdate from './updateModal'
 
 const { Search } = Input
 
 export default function User() {
   const [dataUser, setDateUser] = useState<any>([])
   const [open, setOpen] = useState(false)
+  const [openUpdate, setOpenUpdate] = useState(false) // Modal update state
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
   const [total, setTotal] = useState(0)
   const [current, setCurrent] = useState(1)
   const pageSize = 10
@@ -32,6 +35,7 @@ export default function User() {
         message.destroy()
         message.error(err.response.data.message)
         setDateUser([])
+        setTotal(0)
       })
   }
 
@@ -62,11 +66,7 @@ export default function User() {
       key: 'username',
       dataIndex: 'username',
     },
-    {
-      title: 'Mật khẩu',
-      key: 'password',
-      dataIndex: 'password',
-    },
+
     {
       title: 'Họ tên',
       dataIndex: 'name',
@@ -108,7 +108,13 @@ export default function User() {
       render: (_: null, record: any) => {
         return (
           <Row className="flex ">
-            <Button type="primary" className="mr-2" onClick={() => () => {}}>
+            <Button
+              type="primary"
+              className="mr-2"
+              onClick={() => {
+                setSelectedUser(record)
+                setOpenUpdate(true)
+              }}>
               Sửa
             </Button>
             <Popconfirm
@@ -147,7 +153,7 @@ export default function User() {
         </Button>
         <ModalAddUser open={open} setOpen={setOpen} />
       </Row>
-
+      <ModalUpdate open={openUpdate} setOpen={setOpenUpdate} user={selectedUser} fetchData={fectch} />
       <Table columns={columns} dataSource={dataUser} bordered rowKey="_id" pagination={false} tableLayout="auto" />
       <Pagination
         current={current}

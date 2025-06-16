@@ -7,10 +7,17 @@ const { generateAccessToken, generateRefreshToken } = require('../utils/token');
 const tokenModel = require('../models/tokenModel');
 
 exports.register = async (req, res) => {
+<<<<<<< Updated upstream
   const { username, password, phone, address, name, profile, dob } = req.body;
 
   if (req.file) {
     profile = `${process.env.HOST}:${process.env.PORT}/uploads/${req.file.filename}`;
+=======
+  const { username, password, phone, address, name, dob } = req.body;
+  let profile = '/default.png'
+  if (req.file) {
+    profile = `/videos/${req.file.filename}`;
+>>>>>>> Stashed changes
   }
   // 1. Check thiếu dữ liệu
   if (!username || !password) {
@@ -36,7 +43,6 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   const { username, password } = req.body;
-
   if (!username || !password) {
     return res.status(400).json({ status: false, message: 'Vui lòng nhập username và password' });
   }

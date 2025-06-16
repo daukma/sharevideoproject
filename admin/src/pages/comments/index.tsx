@@ -90,9 +90,6 @@ export default function Comments() {
       render: (_: null, record: any) => {
         return (
           <Row className="flex ">
-            <Button type="primary" className="mr-2" onClick={() => () => {}}>
-              Sửa
-            </Button>
             <Popconfirm
               title="Bạn có chắc chắn muốn xóa người dùng này không?"
               okText="Xóa"

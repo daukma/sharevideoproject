@@ -30,4 +30,15 @@ export class UserAPI {
       url: `/${this.COMPONENT_NAME}/${id}`,
     })
   }
+
+  static update = async (id: string, data: FormData) => {
+    return request({
+      method: Method.PUT, // Sử dụng PUT để cập nhật
+      url: `/${this.COMPONENT_NAME}/${id}`, // URL với id người dùng cần cập nhật
+      data: data,
+      headers: {
+        'Content-Type': 'multipart/form-data', // Đảm bảo gửi dữ liệu với content type là 'multipart/form-data' để gửi file
+      },
+    })
+  }
 }

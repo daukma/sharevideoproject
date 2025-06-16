@@ -4,8 +4,6 @@ const getAllUsers = async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
-    const total = await User.countDocuments();
-    const totalPage = Math.ceil(total / limit);
     const search = req.query.search || '';
 
     // Tạo điều kiện lọc
@@ -18,9 +16,12 @@ const getAllUsers = async (req, res) => {
       }
       : {};
 
-    if (page > totalPage) return res.status(404).json({ status: false, message: 'Không tìm thấy trang này' });
 
     const skip = (page - 1) * limit;
+    const total = await User.countDocuments(query);
+    const totalPage = Math.ceil(total / limit);
+    if (page > totalPage) return res.status(404).json({ status: false, message: 'Không tìm thấy trang này' });
+
     const users = (await User.find(query).skip(skip).limit(limit).select('-password'));
     if (!users || users.length === 0) return res.status(404).json({ status: false, message: 'Không tìm thấy người dùng nào' });
 
@@ -43,44 +44,48 @@ const getUserById = async (req, res) => {
 }
 const updateUser = async (req, res) => {
   try {
-    // Giả sử bạn xác thực người dùng qua token hoặc session, lấy userId
-    const isAdmin = req.roles;
+    const userId = req.params.id;
+    const roles = req.user?.roles;
 
-    const updateData = {};
-
-    if ((!isAdmin || isAdmin !== 'admin') && req.body.roles) {
-      console.log('admin:', isAdmin, req.body.roles);
-      return res.status(403).json({ status: false, message: 'Bạn không có quyền cập nhật roles' });
-    } else {
-      updateData.roles = req.body.roles;
-    }
-    const userId = req.params.id; // Thay bằng logic xác thực thực tế, ví dụ: req.user.id từ JWT
     if (!userId) {
       return res.status(401).json({ status: false, message: 'Yêu cầu xác thực' });
     }
-    // Dữ liệu từ client
-    const { name, address, phone, dob, profile, password } = req.body;
-    // Tạo object chứa các trường cần cập nhật
+
+    const updateData = {};
+
+    // Kiểm tra quyền cập nhật roles
+    if (req.body.roles && roles !== 'admin') {
+      return res.status(403).json({ status: false, message: 'Bạn không có quyền cập nhật roles' });
+    }
+    if (req.body.roles) updateData.roles = req.body.roles;
+
+    const { name, address, phone, dob, password } = req.body;
+
     if (name) updateData.name = name;
     if (address) updateData.address = address;
     if (phone) updateData.phone = phone;
-    if (dob) updateData.dob = new Date(dob);
-    if (profile) updateData.profile = profile;
+    if (dob) updateData.dob = dob;
+
+    // Xử lý file ảnh (nếu có)
+    if (req.file) {
+      updateData.profile = req.file.filename; // hoặc .path nếu lưu full path
+    }
+
     if (password) {
-      // Mã hóa password nếu được cung cấp
       const salt = await bcrypt.genSalt(10);
       updateData.password = await bcrypt.hash(password, salt);
     }
-    // Cập nhật user trong database
+
     const user = await User.findByIdAndUpdate(
       userId,
       { $set: updateData },
-      { new: true, runValidators: true } // new: trả về document đã cập nhật, runValidators: kiểm tra schema
+      { new: true, runValidators: true }
     );
 
     if (!user) {
       return res.status(404).json({ status: false, message: 'Người dùng không tồn tại' });
     }
+
     res.status(200).json({ status: true, message: 'Cập nhật thành công', data: { id: userId } });
   } catch (error) {
     console.error('Lỗi cập nhật user:', error);

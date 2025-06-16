@@ -1,5 +1,5 @@
 import { PlusOutlined } from '@ant-design/icons'
-import { Button, Col, Form, Input, message, Modal, Row, Upload } from 'antd'
+import { Button, Col, DatePicker, Form, Input, message, Modal, Row, Upload } from 'antd'
 import { useState } from 'react'
 import { IUser } from '../../inteface/User.interface'
 import { AuthAPI } from '../../apis/Auth.api'
@@ -20,14 +20,14 @@ const ModalAddUser = ({ open, setOpen }: ModalProps) => {
       setAvatarFile(file)
     }
   }
-  const onFinish = async (values: IUser) => {
+  const onFinish = async (values: any) => {
     const formData = new FormData()
     formData.append('name', values.name)
     formData.append('username', values.username)
     formData.append('password', values.password)
     if (values.phone) formData.append('phone', values.phone)
     if (values.address) formData.append('address', values.address)
-    if (values.dob) formData.append('dob', values.dob.toISOString())
+    if (values.dob) formData.append('dob', values.dob.format('DD/MM/YYYY'))
 
     if (avatarFile) {
       formData.append('image', avatarFile)
@@ -51,10 +51,12 @@ const ModalAddUser = ({ open, setOpen }: ModalProps) => {
       .finally(() => {
         form.resetFields()
         setOpen(false)
+        setAvatarFile(null)
       })
   }
   const onFinishFailed = (error: any) => {
     setOpen(false)
+    setAvatarFile(null)
   }
 
   return (
@@ -67,6 +69,7 @@ const ModalAddUser = ({ open, setOpen }: ModalProps) => {
       onCancel={() => {
         setOpen(false)
         form.resetFields()
+        setAvatarFile(null)
       }}
       width={600}>
       <Form layout="vertical" form={form} onFinish={onFinish} onFinishFailed={onFinishFailed} autoComplete="off">
@@ -121,7 +124,7 @@ const ModalAddUser = ({ open, setOpen }: ModalProps) => {
 
           <Col span={11}>
             <Form.Item name="dob" label="Ngày sinh">
-              <Input placeholder="Nhập ngày sinh..." type="date" />
+              <DatePicker format="DD/MM/YYYY" style={{ width: '100%' }} />
             </Form.Item>
           </Col>
         </Row>

@@ -7,6 +7,7 @@ const connectDb = require('./helps/connectDb'); // Kết nối DB
 const setupSocket = require('./helps/socket'); // Thiết lập socket
 
 const authRoutes = require('./routes/authRoute');
+const dashboardRoutes = require('./routes/dashboardRoute');
 const userRoutes = require('./routes/userRoute');
 const videoRoutes = require('./routes/videoRoute'); // Import videoRoute
 const commentRoutes = require('./routes/commentRoute'); // Import commentRoute
@@ -32,6 +33,7 @@ app.set('connectedUsers', connectedUsers);
 app.use('/videos', express.static('public/videos'));
 
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/dashboard', dashboardRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/videos', videoRoutes); // Sử dụng videoRoute
 app.use('/api/v1/comments', commentRoutes); // Sử dụng commentRoute

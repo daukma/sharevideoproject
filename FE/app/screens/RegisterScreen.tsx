@@ -1,6 +1,6 @@
 import { CommonActions, useNavigation } from '@react-navigation/native'
 import React, { useState } from 'react'
-import { KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Button, TextInput } from 'react-native-paper'
 import { AuthAPI } from '../apis/Auth.api'
 
@@ -14,7 +14,17 @@ const RegisterScreen = () => {
 
   const handleRegister = async () => {
     console.log({ username, password, name, address, phone })
-    await AuthAPI.register({ username, password, name, address, phone }).then((res) => console.log(res))
+    await AuthAPI.register({ username, password, name, address, phone })
+      .then((res) => {
+        Alert.alert('🎉 Thành công', 'Đăng ký thành công!')
+        navigation.dispatch(
+          CommonActions.reset({
+            index: 0,
+            routes: [{ name: 'Login' }],
+          }),
+        )
+      })
+      .catch((err) => Alert.alert('❌ Thất bại', 'Đăng ký thất bị vì tài khoản đã tồn tại'))
   }
 
   return (
