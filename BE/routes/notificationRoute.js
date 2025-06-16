@@ -2,7 +2,11 @@ const express = require('express');
 const router = express.Router();
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 const { createSystemNotification, getAllNotifications, getNotificationsForUser } = require('../controllers/notificationController');
+=======
+const { createSystemNotification, getAllNotifications, deleteNotification, updateNotification, getNotificationsForUser } = require('../controllers/notificationController');
+>>>>>>> Stashed changes
 =======
 const { createSystemNotification, getAllNotifications, deleteNotification, updateNotification, getNotificationsForUser } = require('../controllers/notificationController');
 >>>>>>> Stashed changes
@@ -17,6 +21,9 @@ router.get('/', authMiddleware, adminMiddleware, getAllNotifications); // Lấy 
 router.delete('/:id', authMiddleware, adminMiddleware, deleteNotification)
 router.put('/:id', authMiddleware, adminMiddleware, updateNotification)
 router.get('/getforuser', authMiddleware, getNotificationsForUser)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 
 

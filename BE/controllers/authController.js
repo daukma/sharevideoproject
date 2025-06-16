@@ -8,10 +8,17 @@ const tokenModel = require('../models/tokenModel');
 
 exports.register = async (req, res) => {
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
   const { username, password, phone, address, name, profile, dob } = req.body;
 
   if (req.file) {
     profile = `${process.env.HOST}:${process.env.PORT}/uploads/${req.file.filename}`;
+=======
+  const { username, password, phone, address, name, dob } = req.body;
+  let profile = '/default.png'
+  if (req.file) {
+    profile = `/videos/${req.file.filename}`;
+>>>>>>> Stashed changes
 =======
   const { username, password, phone, address, name, dob } = req.body;
   let profile = '/default.png'

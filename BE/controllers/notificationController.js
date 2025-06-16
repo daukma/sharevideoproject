@@ -152,6 +152,11 @@ module.exports = {
   createSystemNotification,
   getAllNotifications,
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+  deleteNotification,
+  updateNotification,
+>>>>>>> Stashed changes
 =======
   deleteNotification,
   updateNotification,
